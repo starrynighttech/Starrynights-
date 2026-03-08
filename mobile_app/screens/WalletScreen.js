@@ -1,60 +1,49 @@
-import { useEffect, useState } from "react"
-import { View, Text, StyleSheet, ActivityIndicator } from "react-native"
+import React, { useEffect, useState } from "react"
+import { View, Text, StyleSheet } from "react-native"
 
 export default function WalletScreen() {
 
-  const [balance, setBalance] = useState(null)
+  const [balance,setBalance] = useState(0)
 
-  const fetchBalance = async () => {
-    try {
-      const res = await fetch("http://localhost:5000/wallet/balance")
-      const data = await res.json()
-
-      setBalance(data.balance)
-
-    } catch (error) {
-      console.log("Error fetching wallet:", error)
-    }
-  }
-
-  useEffect(() => {
-    fetchBalance()
-  }, [])
+  useEffect(()=>{
+    fetch("http://localhost:5000/wallet/balance?userId=1")
+      .then(res => res.json())
+      .then(data => {
+        setBalance(data.balance)
+      })
+  },[])
 
   return (
+
     <View style={styles.container}>
 
-      <Text style={styles.title}>Your Wallet</Text>
+      <Text style={styles.title}>Wallet</Text>
 
-      {balance === null ? (
-        <ActivityIndicator size="large" color="#00ffcc" />
-      ) : (
-        <Text style={styles.balance}>${balance}</Text>
-      )}
+      <Text style={styles.balance}>
+        ${balance}
+      </Text>
 
     </View>
+
   )
 }
 
 const styles = StyleSheet.create({
 
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#000"
+  container:{
+    flex:1,
+    justifyContent:"center",
+    alignItems:"center"
   },
 
-  title: {
-    fontSize: 28,
-    color: "#fff",
-    marginBottom: 20
+  title:{
+    fontSize:30,
+    fontWeight:"bold"
   },
 
-  balance: {
-    fontSize: 40,
-    color: "#00ffcc",
-    fontWeight: "bold"
+  balance:{
+    fontSize:40,
+    marginTop:20
   }
 
 })

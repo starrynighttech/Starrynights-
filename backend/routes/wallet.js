@@ -1,8 +1,18 @@
 const express = require("express")
 const router = express.Router()
 
-router.get("/balance",(req,res)=>{
-  res.json({balance:0})
+const User = require("../models/User")
+
+router.get("/balance", async (req,res)=>{
+
+  const userId = req.query.userId
+
+  const user = await User.findById(userId)
+
+  res.json({
+    balance: user.walletBalance
+  })
+
 })
 
 module.exports = router
