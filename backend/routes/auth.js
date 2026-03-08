@@ -13,11 +13,13 @@ router.post("/signup", async (req,res)=>{
 
   const hashed = await bcrypt.hash(password,10)
 
+  const code = Math.random().toString(36).substring(2,8) 
   const user = new User({
-    username,
-    email,
-    password: hashed
-  })
+  username,
+  email,
+  password: hashed,
+  referralCode: code
+})
 
   await user.save()
 
