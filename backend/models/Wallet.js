@@ -1,17 +1,18 @@
-const mongoose = require("mongoose")
+const router = require("express").Router()
+const User = require("../models/User")
 
-const WalletSchema = new mongoose.Schema({
+router.get("/:userId", async (req, res) => {
+  try {
 
-  userId:{
-    type:mongoose.Schema.Types.ObjectId,
-    ref:"User"
-  },
+    const user = await User.findById(req.params.userId)
 
-  balance:{
-    type:Number,
-    default:0
+    res.json({
+      balance: user.walletBalance
+    })
+
+  } catch (err) {
+    res.status(500).json(err)
   }
-
 })
 
-module.exports = mongoose.model("Wallet",WalletSchema)
+module.exports = router
