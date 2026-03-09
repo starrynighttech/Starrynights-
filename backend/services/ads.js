@@ -1,7 +1,11 @@
-function rewardUser(){
-  return {
-    reward:0.05
-  }
-}
+module.exports = {
 
-module.exports = rewardUser
+  adReward:0.05,
+
+  shakeReward:0.02,
+
+  dailyAdLimit:20,
+
+  dailyShakeLimit:50
+
+}

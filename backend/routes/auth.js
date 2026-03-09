@@ -1,32 +1,36 @@
 const express = require("express")
 const router = express.Router()
+
 const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken")
 
 const User = require("../models/User")
 
-const SECRET = "ultratechhub_secret"
-
+// signup
 router.post("/signup", async (req,res)=>{
 
   const {username,email,password} = req.body
 
   const hashed = await bcrypt.hash(password,10)
 
-  const code = Math.random().toString(36).substring(2,8) 
+  const referralCode = Math.random().toString(36).substring(2,8)
+
   const user = new User({
-  username,
-  email,
-  password: hashed,
-  referralCode: code
-})
+    username,
+    email,
+    password:hashed,
+    referralCode
+  })
 
   await user.save()
 
-  res.json({message:"User created"})
+  res.json({
+    message:"User created"
+  })
 
 })
 
+// login
 router.post("/login", async (req,res)=>{
 
   const {email,password} = req.body
@@ -34,21 +38,24 @@ router.post("/login", async (req,res)=>{
   const user = await User.findOne({email})
 
   if(!user){
-    return res.status(400).json({error:"User not found"})
+    return res.json({error:"User not found"})
   }
 
-  const match = await bcrypt.compare(password,user.password)
+  const valid = await bcrypt.compare(password,user.password)
 
-  if(!match){
-    return res.status(400).json({error:"Wrong password"})
+  if(!valid){
+    return res.json({error:"Invalid password"})
   }
 
   const token = jwt.sign(
-    {userId:user._id},
-    SECRET
+    {id:user._id},
+    "starry_secret"
   )
 
-  res.json({token})
+  res.json({
+    token,
+    userId:user._id
+  })
 
 })
 
