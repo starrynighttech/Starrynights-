@@ -20,7 +20,7 @@ app.use("/api/earn", require("./routes/earn"))
 app.use("/api/shop", require("./routes/shop"))
 app.use("/api/withdraw", require("./routes/withdraw"))
 
-const PORT = 5000
+const PORT = process.env.PORT || 5000
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
